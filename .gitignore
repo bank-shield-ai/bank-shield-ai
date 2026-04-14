@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.env
+
+# Data & Models (Büyük dosyalar)
+data/
+models/*.pkl
+models/*.joblib
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
