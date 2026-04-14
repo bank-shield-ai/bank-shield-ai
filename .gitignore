@@ -4,12 +4,10 @@ __pycache__/
 venv/
 .env
 
-# Data & Models (Büyük dosyalar)
+# Data & Models
 data/
 models/*.pkl
 models/*.joblib
 
-# IDE
-.vscode/
-.idea/
+# Mac-specific
 .DS_Store
