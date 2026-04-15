@@ -4,10 +4,9 @@ __pycache__/
 venv/
 .env
 
-# Data & Models
-data/
-models/*.pkl
-models/*.joblib
+# Büyük data ignore
+data/raw/
+df_combined.parquet
 
-# Mac-specific
+# Mac
 .DS_Store
