@@ -11,3 +11,5 @@ models/*.joblib
 
 # Mac-specific
 .DS_Store
+notebooks/*.parquet
+notebooks/*.parquet
