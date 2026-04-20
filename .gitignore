@@ -10,3 +10,9 @@ df_combined.parquet
 
 # Mac
 .DS_Store
+
+
+# allow lite model
+!models/fraud_lite_model.joblib
+!models/fraud_lite_feature_columns.joblib
+!models/fraud_lite_category_values.joblib
