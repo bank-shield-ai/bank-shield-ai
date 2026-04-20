@@ -1,14 +1,25 @@
 # Python
 __pycache__/
 *.py[cod]
-venv/
-.env
+.venv/
+env/
 
-# Büyük data ignore
-data/raw/
-df_combined.parquet
+# Jupyter
+.ipynb_checkpoints/
 
-# Mac
+# OS
 .DS_Store
-notebooks/*.parquet
-notebooks/*.parquet
+
+# Data (genelde ignore)
+data/raw/*
+data/processed/*
+
+# Ama BU dosya kalsın 👇
+!data/processed/transaction_features_mvp_sample.parquet
+
+# .gitkeep dosyaları da kalsın
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Secrets
+.env
