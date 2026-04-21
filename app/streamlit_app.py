@@ -36,62 +36,74 @@ st.set_page_config(page_title="CaixaBank AI Risk Hub", page_icon="🏦", layout=
 # --- GELİŞMİŞ CSS: GERÇEK BANKACILIK TEMASI ---
 st.markdown("""
     <style>
-    /* Header düzeni: Logo sol, Butonlar sağ */
+    /* Arka plan ve genel font */
+    .main { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    
+    /* Üst Header Alanı */
     .header-box {
         background-color: white;
-        padding: 15px 50px;
+        padding: 20px 50px;
         display: flex;
-        justify-content: space-between; /* Bu satır butonları sağa iter */
+        justify-content: space-between;
         align-items: center;
-        border-bottom: 3px solid #ff6600;
-    }
-
-    .header-right-menu {
-        display: flex;
-        gap: 15px;
+        border-bottom: 3px solid #ff6600; /* Caixabank Turuncusu */
+        margin-bottom: 0px;
     }
     
-    /* Müşteri Ol Butonu (Kırmızı) */
-    .btn-register {
-        background-color: #eb0000;
-        color: white !important;
-        padding: 10px 25px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: bold;
-        transition: 0.3s;
+    /* Hero Section (Giriş Bannerı) */
+    .hero-section {
+        background: linear-gradient(135deg, #004587 0%, #002e5a 100%);
+        color: white;
+        padding: 60px 50px;
+        text-align: left;
+        border-radius: 0 0 50px 50px;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
     
-    /* Giriş Yap Butonu (Yeşil) */
-    .btn-login {
-        background-color: #00a550;
-        color: white !important;
+    /* Kart Tasarımları */
+    .service-card {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+        border: 1px solid #e1e4e8;
+        height: 100%;
+    }
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    
+    /* Buton Tasarımları */
+    div.stButton > button {
+        background-color: #004587;
+        color: white;
+        border-radius: 50px;
+        border: none;
         padding: 10px 25px;
-        border-radius: 5px;
-        text-decoration: none;
         font-weight: bold;
         transition: 0.3s;
+        width: 100%;
     }
-
-    .btn-register:hover, .btn-login:hover {
-        opacity: 0.8;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    div.stButton > button:hover {
+        background-color: #ff6600;
+        color: white;
+        border: none;
     }
+    
+    /* Sidebar Temizleme */
+    section[data-testid="stSidebar"] { background-color: #ffffff; }
     </style>
     """, unsafe_allow_html=True)
 
 
 # --- HERO SECTION ---
-# --- HEADER GÜNCELLEMESİ ---
-st.markdown(f"""
-    <div class="header-box">
-        <div style="display: flex; align-items: center;">
-            {logo_html}
-        </div>
-        <div class="header-right-menu">
-            <a href="#" class="btn-register">Müşteri Ol</a>
-            <a href="#" class="btn-login">Giriş Yap</a>
-        </div>
+st.markdown("""
+    <div class="hero-section">
+        <h1 style="font-size: 3rem; margin-bottom: 10px; color: white;">Güvenliğiniz, Bizim Önceliğimiz.</h1>
+        <p style="font-size: 1.2rem; opacity: 0.9;">Yapay zeka destekli Risk Yönetim Portalı ile tüm işlemlerinizi 7/24 kontrol altında tutun.</p>
     </div>
     """, unsafe_allow_html=True)
 
