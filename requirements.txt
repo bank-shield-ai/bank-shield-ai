@@ -1,14 +1,8 @@
 streamlit
 pandas
+joblib
 numpy
-<<<<<<< HEAD
-scikit-learn
-joblib
+category_encoders
 xgboost
-pyarrow
-=======
-pyarrow
 scikit-learn
-xgboost
-joblib
->>>>>>> 59586aa (Finalize cleanup (remaining changes))
+pyarrow
