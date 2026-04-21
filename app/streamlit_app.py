@@ -98,13 +98,6 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- HEADER ---
-st.markdown(f"""
-    <div class="header-box">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/CaixaBank.svg" width="180">
-        <div style="color: #004587; font-weight: bold;">Kişisel Bankacılık | Kurumsal | AI Risk Portal</div>
-    </div>
-    """, unsafe_allow_html=True)
 
 # --- HERO SECTION ---
 st.markdown("""
