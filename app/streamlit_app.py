@@ -119,15 +119,23 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- HEADER (LOGO + SAĞ ÜST BUTONLAR) ---
+
+# --- HEADER (MENÜ + BUTONLAR KOMBO) ---
 st.markdown(f"""
     <div class="header-box">
         <div style="display: flex; align-items: center;">
             {logo_html}
         </div>
-        <div class="header-right-menu">
-            <a href="#" class="btn-register">Müşteri Ol</a>
-            <a href="#" class="btn-login">Giriş Yap</a>
+        
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+            <div style="color: #004587; font-size: 13px; font-weight: 500; letter-spacing: 0.5px;">
+                Bireysel &nbsp; | &nbsp; Kurumsal &nbsp; | &nbsp; <span style="font-weight: bold; color: #ff6600;">AI Risk Portal</span>
+            </div>
+            
+            <div class="header-right-menu">
+                <a href="#" class="btn-register">Müşteri Ol</a>
+                <a href="#" class="btn-login">Giriş Yap</a>
+            </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
