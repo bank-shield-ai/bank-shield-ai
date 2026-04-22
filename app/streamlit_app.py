@@ -5,153 +5,163 @@ from pathlib import Path
 # --- SAYFA AYARLARI ---
 st.set_page_config(page_title="CaixaBank AI Risk Hub", page_icon="🏦", layout="wide")
 
-# --- LOGO OKUMA ---
+# --- PATHS (Dosya Yolları) ---
+APP_DIR = Path(__file__).resolve().parent
+logo_path = APP_DIR / "logo.png"
+about_img_path = APP_DIR / "about_image.png"
+beha_img_path = APP_DIR / "beha.png"
+loan_img_path = APP_DIR / "loan_image.png"
+
+# --- HELPER: Base64 Görsel Okuma ---
 def get_base64_image(image_path):
     try:
-        with open(image_path, "rb") as img_file:
+        with open(str(image_path), "rb") as img_file:
             return base64.b64encode(img_file.read()).decode()
     except Exception as e:
         return None
 
-current_dir = Path(__file__).parent
-logo_path = current_dir / "logo.png"
-logo_base64 = get_base64_image(str(logo_path))
+# --- SESSION & NAVIGATION ---
+def init_session():
+    if "user_role" not in st.session_state: 
+        st.session_state.user_role = None
+    if "behavioral_view_mode" not in st.session_state: 
+        st.session_state.behavioral_view_mode = "customer"
 
-if logo_base64:
-    logo_html = f'<img src="data:image/png;base64,{logo_base64}" width="200">'
-else:
-    logo_html = '<h2 style="color: #004587; margin:0;">CaixaBank</h2>'
+init_session()
 
-# --- GELİŞMİŞ CSS (TEMİZLİK VE DÜZEN) ---
+# --- CSS (SENİN BEĞENDİĞİN TASARIMIN AYNISI) ---
 st.markdown("""
-    <style>
-    /* Genel Arkaplan */
-    .main { background-color: #f0f2f5; }
-    
-    /* Header Alanı */
-    .header-box {
-        background-color: white;
-        padding: 10px 50px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 3px solid #ff6600;
-    }
-    
-    .nav-links {
-        color: #004587;
-        font-size: 13px;
-        font-weight: 500;
-        margin-bottom: 5px;
-    }
+<style>
+    .main { background-color: white !important; }
+    .block-container { padding: 1.5rem 4rem !important; max-width: 1500px !important; }
 
-    .header-right-container {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-    }
+    .header-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
 
-    .header-right-menu {
-        display: flex;
-        gap: 15px;
-    }
-    
-    /* Butonlar */
-    .btn-register {
-        background-color: #eb0000;
-        color: white !important;
-        padding: 8px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 14px;
-    }
-    
-    .btn-login {
-        background-color: #00a550;
-        color: white !important;
-        padding: 8px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 14px;
-    }
-
-    /* Hero Section */
-    .hero-section {
+    .hero-box {
         background: linear-gradient(135deg, #004587 0%, #002e5a 100%);
-        color: white;
-        padding: 60px 50px;
-        border-radius: 0 0 50px 50px;
-        margin-bottom: 40px;
+        color: white; padding: 85px 55px; border-radius: 35px;
+        margin-bottom: 50px; box-shadow: 0 15px 35px rgba(0,69,135,0.1);
     }
-    
-    /* Servis Kartları */
-    .service-card {
-        background: white;
-        padding: 30px;
-        border-radius: 20px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        height: 250px;
-        border: 1px solid #e1e4e8;
+    .hero-title { font-size: 3.8rem; font-weight: 800; margin-bottom: 15px; }
+    .hero-sub { font-size: 1.4rem; opacity: 0.9; }
+
+    /* Kart Tasarımı */
+    .custom-card {
+        background: white; border-radius: 28px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+        height: 520px; overflow: hidden;
+        display: flex; flex-direction: column;
+        border: 1px solid #f0f2f5;
     }
-    
-    /* Streamlit'in kendi butonlarını özelleştirme */
+    .card-img { width: 100%; height: 280px; object-fit: cover; }
+    .card-text-area { padding: 25px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+    .card-title { font-size: 1.6rem; font-weight: 700; color: #1f2d3d; margin-bottom: 12px; }
+    .card-desc { color: #667085; font-size: 1rem; line-height: 1.6; font-weight: 500; }
+
+    /* Butonlar */
     div.stButton > button {
-        background-color: #004587;
-        color: white;
-        border-radius: 50px;
-        width: 100%;
+        background-color: #004587 !important; color: white !important;
+        border-radius: 30px !important; border: none !important;
+        padding: 12px 28px !important; font-weight: 600 !important;
+        width: 100% !important; min-height: 48px;
     }
-    </style>
-    """, unsafe_allow_html=True)
 
-# --- HEADER (LOGO + NAV + BUTONLAR) ---
+    div[data-testid="stPopover"] button {
+        background-color: #00a550 !important; border-radius: 12px !important;
+    }
+
+    /* TURUNCU BUTON ÖZEL */
+    [data-testid="column"]:nth-child(2) div.stButton > button {
+        background-color: #ff6600 !important;
+    }
+
+    .footer { text-align: center; padding: 50px; margin-top: 60px; border-top: 1px solid #eee; color: #888; }
+</style>
+""", unsafe_allow_html=True)
+
+# --- HEADER ---
+col_logo, col_nav = st.columns([2.5, 1])
+
+with col_logo:
+    logo_base64 = get_base64_image(logo_path)
+    if logo_base64:
+        st.markdown(f'<img src="data:image/png;base64,{logo_base64}" style="width:350px;">', unsafe_allow_html=True)
+    else:
+        st.header("CaixaBank")
+
+with col_nav:
+    st.markdown("<div style='height:15px;'></div>", unsafe_allow_html=True)
+    c_btn1, c_btn2 = st.columns(2)
+    with c_btn1:
+        st.button("Müşteri Ol", key="top_reg")
+    with c_btn2:
+        with st.popover("Giriş Yap", use_container_width=True):
+            if st.button("Yetkili Girişi", key="auth_l"):
+                st.session_state.user_role = "authorized"
+                st.switch_page("pages/00_Yetkili_Paneli.py")
+            if st.button("Müşteri Girişi", key="cust_l"):
+                st.session_state.user_role = "customer"
+                st.switch_page("pages/02_Behavioral_Risk.py")
+
+# --- HERO ---
 st.markdown(f"""
-    <div class="header-box">
-        <div>{logo_html}</div>
-        <div class="header-right-container">
-            <div class="nav-links">
-                Bireysel &nbsp; | &nbsp; Kurumsal &nbsp; | &nbsp; 
-                <span style="font-weight: bold; color: #ff6600;">AI Risk Portal</span>
-            </div>
-            <div class="header-right-menu">
-                <a href="#" class="btn-register">Müşteri Ol</a>
-                <a href="#" class="btn-login">Giriş Yap</a>
-            </div>
+<div class="hero-box">
+    <div class="hero-title">Güvenliğiniz, Bizim Önceliğimiz.</div>
+    <div class="hero-sub">Yapay zeka destekli Risk Yönetim Portalı ile tüm işlemlerinizi 7/24 kontrol altında tutun.</div>
+</div>
+""", unsafe_allow_html=True)
+
+# --- ANA İÇERİK ---
+col1, col2, col3 = st.columns(3, gap="large")
+
+about_img = get_base64_image(about_img_path)
+beha_img = get_base64_image(beha_img_path)
+loan_img = get_base64_image(loan_img_path)
+
+# 1. KART
+with col1:
+    st.markdown(f"""
+    <div class="custom-card">
+        <img src="data:image/png;base64,{about_img}" class="card-img">
+        <div class="card-text-area">
+            <div class="card-desc">CaixaBank hakkında daha fazla bilgi alın.</div>
         </div>
-    </div>
     """, unsafe_allow_html=True)
+    st.button("Hakkımızda", key="abt_btn", disabled=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
-# --- HERO SECTION ---
+# 2. KART (TURUNCU BUTON)
+with col2:
+    st.markdown(f"""
+    <div class="custom-card">
+        <img src="data:image/png;base64,{beha_img}" class="card-img">
+        <div class="card-text-area">
+            <div class="card-title">📊 Anlık Verilerle Risk Skorunu Hesapla</div>
+        </div>
+    """, unsafe_allow_html=True)
+    # on_click rerun hatasına sebep olabildiği için if kontrolü ile yönlendirme yaptık
+    if st.button("Hemen Başla", key="beh_btn"):
+        st.session_state.user_role = "customer"
+        st.session_state.behavioral_view_mode = "customer"
+        st.switch_page("pages/02_Behavioral_Risk.py")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# 3. KART
+with col3:
+    st.markdown(f"""
+    <div class="custom-card">
+        <img src="data:image/png;base64,{loan_img}" class="card-img">
+        <div class="card-text-area">
+            <div class="card-desc">5000 Dolara kadar faizsiz kredi imkanı</div>
+        </div>
+    """, unsafe_allow_html=True)
+    st.button("Başvur", key="loan_btn")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# --- FOOTER ---
 st.markdown("""
-    <div class="hero-section">
-        <h1 style="color: white; margin-bottom: 10px;">Güvenliğiniz, Bizim Önceliğimiz.</h1>
-        <p style="opacity: 0.9;">Yapay zeka destekli Risk Yönetim Portalı ile tüm işlemlerinizi 7/24 kontrol altında tutun.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-# --- İÇERİK KARTLARI ---
-st.markdown('<div style="padding: 0 50px;">', unsafe_allow_html=True)
-c1, c2, c3 = st.columns(3)
-
-with c1:
-    st.markdown('<div class="service-card"><h3>🔍 Fraud Detection</h3><p>Anlık işlem bazlı sahtecilik analizi.</p></div>', unsafe_allow_html=True)
-    if st.button("Hemen Analiz Et ➔", key="f"): st.switch_page("pages/01_Fraud_Detection.py")
-
-with c2:
-    st.markdown('<div class="service-card"><h3>📊 Behavioral Risk</h3><p>Müşteri davranışsal profil analizi.</p></div>', unsafe_allow_html=True)
-    if st.button("Skorları Görüntüle ➔", key="r"): st.switch_page("pages/02_Behavioral_Risk.py")
-
-with c3:
-    st.markdown('<div class="service-card"><h3>🛡️ Security Logs</h3><p>Sistem raporları ve geçmiş kayıtlar.</p></div>', unsafe_allow_html=True)
-    st.button("Yakında", disabled=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
-# --- ALT BİLGİ (FOOTER) ---
-st.markdown("""
-    <div style="text-align: center; margin-top: 80px; padding: 30px; color: #7f8c8d; font-size: 0.85rem; border-top: 1px solid #e1e4e8;">
-        © 2026 CaixaBank AI Risk Management Solutions. All Rights Reserved. <br>
-        <span style="font-size: 0.75rem; opacity: 0.8;">Güvenliğiniz için tüm işlemler uçtan uca şifrelenmektedir.</span>
-    </div>
-    """, unsafe_allow_html=True)
+<div class="footer">
+    © 2026 CaixaBank AI Risk Management Solutions. All Rights Reserved.<br>
+    <small>Güvenliğiniz için tüm işlemler uçtan uca şifrelenmektedir.</small>
+</div>
+""", unsafe_allow_html=True)
